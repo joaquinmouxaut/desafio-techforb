@@ -1,10 +1,8 @@
 package com.spring.desafio_techforb.services.imp;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.spring.desafio_techforb.services.IJWTUtilityService;
@@ -20,8 +18,10 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -50,6 +50,27 @@ public class JWTUtilityServiceImp implements IJWTUtilityService {
         signedJWT.sign(signer);
 
         return signedJWT.serialize();
+    }
+
+    @Override
+    public JWTClaimsSet parseJWT(String jwt) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, ParseException, JOSEException {
+        PublicKey publicKey = loadPublicKey(publicKeyResource);
+
+        SignedJWT signedJWT = SignedJWT.parse(jwt);
+
+        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
+
+        if(!signedJWT.verify(verifier)) {
+            throw new JOSEException("Invalid signature");
+        }
+
+        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+
+        if(claimsSet.getExpirationTime().before(new Date())) {
+            throw new JOSEException("Expired token");
+        }
+
+        return claimsSet;
     }
 
 
