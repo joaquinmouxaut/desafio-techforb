@@ -21,10 +21,10 @@ public class ActorEntity {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "actor_pelicula", joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actorId"),
-            inverseJoinColumns = @JoinColumn(name = "pelicula_id", referencedColumnName = "peliculaId")
+            name = "actor_pelicula",
+            joinColumns = @JoinColumn(name = "actorId"),
+            inverseJoinColumns = @JoinColumn(name = "peliculaId")
     )
-
     private List<PeliculaEntity> peliculas;
 
     public ActorEntity() {}

@@ -2,6 +2,7 @@ package com.spring.desafio_techforb.persistence.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,11 +14,9 @@ public class PeliculaEntity {
 
     private String titulo;
 
-    private Short estreno;
+    private String estreno;
 
-    private Short sinopsis;
-
-    private char sexo;
+    private String sinopsis;
 
     @ManyToMany(mappedBy = "peliculas")
     private List<ActorEntity> actores;
@@ -42,28 +41,20 @@ public class PeliculaEntity {
         this.titulo = titulo;
     }
 
-    public Short getEstreno() {
+    public String getEstreno() {
         return estreno;
     }
 
-    public void setEstreno(Short estreno) {
+    public void setEstreno(String estreno) {
         this.estreno = estreno;
     }
 
-    public Short getSinopsis() {
+    public String getSinopsis() {
         return sinopsis;
     }
 
-    public void setSinopsis(Short sinopsis) {
+    public void setSinopsis(String sinopsis) {
         this.sinopsis = sinopsis;
-    }
-
-    public char getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(char sexo) {
-        this.sexo = sexo;
     }
 
     public List<ActorEntity> getActores() {
